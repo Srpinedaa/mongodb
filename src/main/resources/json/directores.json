@@ -1,0 +1,52 @@
+[
+    {
+        "_id": "y961546n",
+        "nombre": "francis ford coppola",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1939-04-07",
+        "biografia": "francis ford coppola es un director, productor y guionista estadounidense, célebre por su trabajo en la trilogía de 'el padrino' y 'apocalypse now'.",
+        "peliculas_dirigidas": [
+            1
+        ]
+    },
+    {
+        "_id": "x964852l",
+        "nombre": "christopher nolan",
+        "nacionalidad": "reino unido",
+        "fecha_nacimiento": "1970-07-30",
+        "biografia": "christopher nolan es un director británico conocido por sus películas innovadoras y narrativas complejas, como 'el caballero de la noche', 'inception' e 'interstellar'.",
+        "peliculas_dirigidas": [
+            2
+        ]
+    },
+    {
+        "_id": "p965874m",
+        "nombre": "quentin tarantino",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1963-03-27",
+        "biografia": "quentin tarantino es un director y guionista estadounidense famoso por su estilo único y el uso del diálogo en películas como 'pulp fiction', 'kill bill' y 'bastardos sin gloria'.",
+        "peliculas_dirigidas": [
+            3
+        ]
+    },
+    {
+        "_id": "f965874m",
+        "nombre": "peter jackson",
+        "nacionalidad": "nueva zelanda",
+        "fecha_nacimiento": "1961-10-31",
+        "biografia": "peter jackson es un director neozelandés reconocido mundialmente por llevar a la gran pantalla la trilogía de 'el señor de los anillos' y 'el hobbit'.",
+        "peliculas_dirigidas": [
+            4
+        ]
+    },
+    {
+        "_id": "g965874m",
+        "nombre": "robert zemeckis",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1951-05-14",
+        "biografia": "robert zemeckis es un director estadounidense conocido por su dominio de los efectos visuales y películas icónicas como 'volver al futuro' y 'forrest gump'.",
+        "peliculas_dirigidas": [
+            5
+        ]
+    }
+]

@@ -1,0 +1,223 @@
+[
+    {
+        "_id": "12345678a",
+        "nombre": "marlon brando",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1924-04-03",
+        "biografia": "marlon brando fue un actor estadounidense considerado uno de los más influyentes del siglo xx. es conocido por sus papeles en 'el padrino' y 'un tranvía llamado deseo'.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor",
+                "año": 1973
+            }
+        ],
+        "peliculas": [
+            1
+        ]
+    },
+    {
+        "_id": "87654321b",
+        "nombre": "al pacino",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1940-04-25",
+        "biografia": "al pacino es un actor y director estadounidense conocido por sus icónicos papeles en 'el padrino', 'scarface' y 'perfume de mujer'.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor",
+                "año": 1993
+            }
+        ],
+        "peliculas": [
+            1
+        ]
+    },
+    {
+        "_id": "23456789c",
+        "nombre": "christian bale",
+        "nacionalidad": "reino unido",
+        "fecha_nacimiento": "1974-01-30",
+        "biografia": "christian bale es un actor británico conocido por su transformación física en cada papel y por su interpretación de batman en 'el caballero de la noche'.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor de reparto",
+                "año": 2011
+            }
+        ],
+        "peliculas": [
+            2
+        ]
+    },
+    {
+        "_id": "98765432d",
+        "nombre": "heath ledger",
+        "nacionalidad": "australia",
+        "fecha_nacimiento": "1979-04-04",
+        "biografia": "heath ledger fue un actor australiano conocido por su interpretación del joker en 'el caballero de la noche', un papel que le valió un oscar póstumo.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor de reparto",
+                "año": 2009
+            }
+        ],
+        "peliculas": [
+            2
+        ]
+    },
+    {
+        "_id": "34567890e",
+        "nombre": "john travolta",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1954-02-18",
+        "biografia": "john travolta es un actor y cantante estadounidense conocido por 'fiebre del sábado noche' y 'pulp fiction', que revitalizó su carrera.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor",
+                "año": 1978
+            }
+        ],
+        "peliculas": [
+            3
+        ]
+    },
+    {
+        "_id": "56789012f",
+        "nombre": "samuel l. jackson",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1948-12-21",
+        "biografia": "samuel l. jackson es un actor estadounidense con una carrera prolífica en cine y televisión, famoso por sus papeles en películas de quentin tarantino y marvel.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor de reparto",
+                "año": 1995
+            }
+        ],
+        "peliculas": [
+            3
+        ]
+    },
+    {
+        "_id": "67890123g",
+        "nombre": "elijah wood",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1981-01-28",
+        "biografia": "elijah wood es un actor estadounidense conocido por su papel como frodo bolsón en la trilogía de 'el señor de los anillos'.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor de reparto",
+                "año": 2004
+            }
+        ],
+        "peliculas": [
+            4
+        ]
+    },
+    {
+        "_id": "78901234h",
+        "nombre": "ian mckellen",
+        "nacionalidad": "reino unido",
+        "fecha_nacimiento": "1939-05-25",
+        "biografia": "ian mckellen es un actor británico conocido por sus interpretaciones de gandalf en 'el señor de los anillos' y magneto en 'x-men'.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor de reparto",
+                "año": 2004
+            }
+        ],
+        "peliculas": [
+            4
+        ]
+    },
+    {
+        "_id": "89012345i",
+        "nombre": "viggo mortensen",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1958-10-20",
+        "biografia": "viggo mortensen es un actor estadounidense conocido por interpretar a aragorn en 'el señor de los anillos' y por su trabajo en cine independiente.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor de reparto",
+                "año": 2004
+            }
+        ],
+        "peliculas": [
+            4
+        ]
+    },
+    {
+        "_id": "90123456j",
+        "nombre": "sean astin",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1971-02-25",
+        "biografia": "sean astin es un actor estadounidense conocido por su papel como samwise gamgee en 'el señor de los anillos' y por 'los goonies'.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor de reparto",
+                "año": 2004
+            }
+        ],
+        "peliculas": [
+            4
+        ]
+    },
+    {
+        "_id": "11223344k",
+        "nombre": "tom hanks",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1956-07-09",
+        "biografia": "tom hanks es un actor y productor estadounidense, considerado uno de los mejores actores de su generación, con películas como 'forrest gump' y 'náufrago'.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor",
+                "año": 1994
+            }
+        ],
+        "peliculas": [
+            5
+        ]
+    },
+    {
+        "_id": "22334455l",
+        "nombre": "robin wright",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1966-04-08",
+        "biografia": "robin wright es una actriz estadounidense conocida por 'forrest gump' y su papel de claire underwood en 'house of cards'.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actriz",
+                "año": 1995
+            }
+        ],
+        "peliculas": [
+            5
+        ]
+    },
+    {
+        "_id": "33445566m",
+        "nombre": "gary sinise",
+        "nacionalidad": "ee.uu.",
+        "fecha_nacimiento": "1955-03-17",
+        "biografia": "gary sinise es un actor y director estadounidense, reconocido por su papel como el teniente dan en 'forrest gump'.",
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor de reparto",
+                "año": 1995
+            }
+        ],
+        "peliculas": [
+            5
+        ]
+    }
+]

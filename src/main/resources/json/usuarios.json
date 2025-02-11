@@ -1,0 +1,46 @@
+[
+    {
+        "_id": "adminmaster",
+        "nombre": "admin master",
+        "email": "admin@cineclub.com",
+        "password": "hashed_password_123",
+        "rol": "admin",
+        "fecha_registro": "2024-02-10"
+    },
+    {
+        "_id": "cinefanatic123",
+        "nombre": "cine fanatic",
+        "email": "cinefanatic123@email.com",
+        "password": "hashed_password_456",
+        "rol": "usuario",
+        "fecha_registro": "2023-11-15",
+        "peliculas_favoritas": [
+            1,
+            3,
+            5
+        ]
+    },
+    {
+        "_id": "batfan87",
+        "nombre": "bruce wayne",
+        "email": "batfan87@email.com",
+        "password": "hashed_password_789",
+        "rol": "usuario",
+        "fecha_registro": "2023-09-20",
+        "peliculas_favoritas": [
+            2,
+            4
+        ]
+    },
+    {
+        "_id": "filmlover90",
+        "nombre": "emma clarke",
+        "email": "filmlover90@email.com",
+        "password": "hashed_password_234",
+        "rol": "usuario",
+        "fecha_registro": "2023-07-05",
+        "peliculas_favoritas": [
+            5
+        ]
+    }
+]

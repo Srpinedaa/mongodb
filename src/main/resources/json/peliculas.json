@@ -1,0 +1,149 @@
+[
+    {
+        "_id": 1,
+        "titulo": "el padrino",
+        "año": 1972,
+        "genero": [
+            "crimen",
+            "drama"
+        ],
+        "calificacion": 9.2,
+        "director_id": "y961546n",
+        "actores_id": [
+            "12345678a",
+            "87654321b"
+        ],
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor película",
+                "año": 1973
+            },
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor",
+                "año": 1973
+            }
+        ],
+        "criticas": [
+            {
+                "usuario": "cinefanatic123",
+                "comentario": "una obra maestra del cine. la actuación de marlon brando es legendaria.",
+                "puntuacion": 10
+            }
+        ]
+    },
+    {
+        "_id": 2,
+        "titulo": "el caballero de la noche",
+        "año": 2008,
+        "genero": [
+            "acción",
+            "crimen",
+            "drama"
+        ],
+        "calificacion": 9.0,
+        "director_id": "x964852l",
+        "actores_id": [
+            "23456789c",
+            "98765432d"
+        ],
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor de reparto",
+                "año": 2009
+            }
+        ],
+        "criticas": [
+            {
+                "usuario": "batfan87",
+                "comentario": "heath ledger entregó la mejor interpretación del joker. increíble película.",
+                "puntuacion": 10
+            }
+        ]
+    },
+    {
+        "_id": 3,
+        "titulo": "pulp fiction",
+        "año": 1994,
+        "genero": [
+            "crimen",
+            "drama"
+        ],
+        "calificacion": 8.9,
+        "director_id": "p965874m",
+        "actores_id": [
+            "34567890e",
+            "56789012f"
+        ],
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor guión original",
+                "año": 1995
+            }
+        ],
+        "criticas": []
+    },
+    {
+        "_id": 4,
+        "titulo": "el señor de los anillos: el retorno del rey",
+        "año": 2003,
+        "genero": [
+            "aventura",
+            "fantasía"
+        ],
+        "calificacion": 8.9,
+        "director_id": "f965874m",
+        "actores_id": [
+            "67890123g",
+            "78901234h",
+            "89012345i",
+            "90123456j"
+        ],
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor película",
+                "año": 2004
+            }
+        ],
+        "criticas": []
+    },
+    {
+        "_id": 5,
+        "titulo": "forrest gump",
+        "año": 1994,
+        "genero": [
+            "drama",
+            "romance"
+        ],
+        "calificacion": 8.8,
+        "director_id": "g965874m",
+        "actores_id": [
+            "11223344k",
+            "22334455l",
+            "33445566m"
+        ],
+        "premios": [
+            {
+                "nombre": "oscar",
+                "categoria": "mejor película",
+                "año": 1995
+            },
+            {
+                "nombre": "oscar",
+                "categoria": "mejor actor",
+                "año": 1995
+            }
+        ],
+        "criticas": [
+            {
+                "usuario": "filmlover90",
+                "comentario": "forrest gump es una historia inspiradora con una actuación brillante de tom hanks.",
+                "puntuacion": 9
+            }
+        ]
+    }
+]
