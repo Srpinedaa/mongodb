@@ -66,7 +66,8 @@ public class MongoDBConnection {
         System.out.println("P E L I C U L A S: ");
         for (Document pelicula : collectionPelicula.find()) {
             try {
-                String asciiArt = FigletFont.convertOneLine(pelicula.get("titulo").toString());
+                String titulo = capitalize(pelicula.get("titulo").toString());
+                String asciiArt = FigletFont.convertOneLine(titulo);
                 System.out.println(asciiArt);
             } catch (Exception e) {
                 System.err.println("Error al generar ASCII Art: " + e.getMessage());
@@ -81,7 +82,8 @@ public class MongoDBConnection {
         System.out.println("A C T O R E S: ");
         for (Document actor : collectionActores.find()) {
             try {
-                String asciiArt = FigletFont.convertOneLine(actor.get("nombre").toString());
+                String nombre = capitalize(actor.get("nombre").toString());
+                String asciiArt = FigletFont.convertOneLine(nombre);
                 System.out.println(asciiArt);
             } catch (Exception e) {
                 System.err.println("Error al generar ASCII Art: " + e.getMessage());
@@ -90,7 +92,7 @@ public class MongoDBConnection {
                     .println(actor.get("nacionalidad") + " - " + actor.get("fecha_nacimiento") + " - "
                             + actor.get("biografia"));
         }
-        System.out.println("Opcion Menu: \n 1:Home \n 2:Buscador \n3:perfil \n 4: cerrar sesion");
+        System.out.println("Opcion Menu: \n 1:Home \n 2:Buscador \n 3:perfil \n 4: cerrar sesion");
         int opcion = lector.nextInt();
         lector.nextLine();
 
@@ -102,8 +104,10 @@ public class MongoDBConnection {
                 buscador(database, lector, userId);
                 break;
             case 3:
+                perfilUsuario(database, lector, userId);
                 break;
             case 4:
+                System.out.println("Sesion cerrada.");
                 break;
             default:
                 break;
@@ -146,7 +150,7 @@ public class MongoDBConnection {
             peliculaEncontrada = true;
             peliculaId = Integer.parseInt(pelicula.get("_id").toString());
             try {
-                String asciiArt = FigletFont.convertOneLine(pelicula.get("titulo").toString());
+                String asciiArt = FigletFont.convertOneLine(capitalize(pelicula.get("titulo").toString()));
                 System.out.println(asciiArt);
             } catch (Exception e) {
                 System.err.println("Error al generar ASCII Art: " + e.getMessage());
@@ -165,11 +169,11 @@ public class MongoDBConnection {
             System.out.println("1. agregar pelicula a favoritas \n 2. Comentar pelicula \n 3. Volver al menu");
             int opcion = lector.nextInt();
             lector.nextLine();
-            occionesPelicula(opcion, peliculaId, userId, database, lector, collectionPelicula);
+            accionesPelicula(opcion, peliculaId, userId, database, lector, collectionPelicula);
         }
     }
 
-    public static void occionesPelicula(int opcion, int peliculaId, String userId, MongoDatabase database,
+    public static void accionesPelicula(int opcion, int peliculaId, String userId, MongoDatabase database,
             Scanner lector, MongoCollection<Document> collectionPelicula) {
         switch (opcion) {
             case 1:
@@ -204,6 +208,63 @@ public class MongoDBConnection {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public static void perfilUsuario(MongoDatabase database, Scanner lector, String userId) {
+        MongoCollection<Document> collectionUsuarios = database.getCollection("usuarios");
+        Document user = collectionUsuarios.find(eq("_id", userId)).first();
+
+        try {
+            String asciiArt = FigletFont.convertOneLine(capitalize(user.get("_id").toString()));
+            System.out.println(asciiArt);
+        } catch (Exception e) {
+            System.err.println("Error al generar ASCII Art: " + e.getMessage());
+        }
+        System.out.println("Peliculas favoritas: ");
+        List<Integer> peliculasFavoritas = (List<Integer>) user.get("peliculas_favoritas");
+        for (int pelicula_id : peliculasFavoritas) {
+            Document pelicula = database.getCollection("peliculas").find(eq("_id", pelicula_id)).first();
+            try {
+                String asciiArt = FigletFont.convertOneLine(capitalize(pelicula.get("titulo").toString()));
+                System.out.println(asciiArt);
+            } catch (Exception e) {
+                System.err.println("Error al generar ASCII Art: " + e.getMessage());
+            }
+
+            List<Document> criticas = (List<Document>) pelicula.get("criticas");
+            for (Document critica : criticas) {
+                if (critica.get("usuario").equals(userId)) {
+                    System.out.println("- " + critica.getString("comentario") + " - " + critica.get("puntuacion"));
+                }
+            }
+            try {
+                String separador = FigletFont.convertOneLine("---------");
+                System.out.println(separador);
+            } catch (Exception e) {
+                System.err.println("Error al generar ASCII Art: " + e.getMessage());
+            }
+
+        }
+        System.out.println("1. modificar cuenta \n 2. Volver al menu");
+        int opcion = lector.nextInt();
+        lector.nextLine();
+        switch (opcion) {
+            case 1:
+                System.out.println("Introduce tu nueva contraseña:");
+                String password = lector.nextLine();
+                Document filtro = new Document("_id", userId);
+                Document actualizacion = new Document("$set", new Document("password", password));
+                collectionUsuarios.updateOne(filtro, actualizacion);
+                System.out.println("Documents actualitzats correctament!");
+                perfilUsuario(database, lector, userId);
+                break;
+            case 2:
+                pantallaHomeUsuario(database, lector, userId);
+                break;
+            default:
+                break;
+        }
+    }
+
     public static void insertar(MongoDatabase database) {
         MongoCollection<Document> collection = database.getCollection("peliculas");
 
@@ -227,4 +288,10 @@ public class MongoDBConnection {
 
     }
 
+    public static String capitalize(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+    }
 }
