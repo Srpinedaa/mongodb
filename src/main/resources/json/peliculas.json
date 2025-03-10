@@ -8,7 +8,12 @@
             "drama"
         ],
         "calificacion": 9.2,
-        "director_id": "y961546n",
+        "director": {
+            "nombre": "francis ford coppola",
+            "nacionalidad": "ee.uu.",
+            "fecha_nacimiento": "1939-04-07",
+            "biografia": "francis ford coppola es un director, productor y guionista estadounidense, célebre por su trabajo en la trilogía de 'el padrino' y 'apocalypse now'."
+        },
         "actores_id": [
             "12345678a",
             "87654321b"
@@ -43,7 +48,12 @@
             "drama"
         ],
         "calificacion": 9.0,
-        "director_id": "x964852l",
+        "director": {
+            "nombre": "christopher nolan",
+            "nacionalidad": "reino unido",
+            "fecha_nacimiento": "1970-07-30",
+            "biografia": "christopher nolan es un director británico conocido por sus películas innovadoras y narrativas complejas, como 'el caballero de la noche', 'inception' e 'interstellar'."
+        },
         "actores_id": [
             "23456789c",
             "98765432d"
@@ -72,7 +82,12 @@
             "drama"
         ],
         "calificacion": 8.9,
-        "director_id": "p965874m",
+        "director": {
+            "nombre": "quentin tarantino",
+            "nacionalidad": "ee.uu.",
+            "fecha_nacimiento": "1963-03-27",
+            "biografia": "quentin tarantino es un director y guionista estadounidense famoso por su estilo único y el uso del diálogo en películas como 'pulp fiction', 'kill bill' y 'bastardos sin gloria'."
+        },
         "actores_id": [
             "34567890e",
             "56789012f"
@@ -95,7 +110,12 @@
             "fantasía"
         ],
         "calificacion": 8.9,
-        "director_id": "f965874m",
+        "director": {
+            "nombre": "peter jackson",
+            "nacionalidad": "nueva zelanda",
+            "fecha_nacimiento": "1961-10-31",
+            "biografia": "peter jackson es un director neozelandés reconocido mundialmente por llevar a la gran pantalla la trilogía de 'el señor de los anillos' y 'el hobbit'."
+        },
         "actores_id": [
             "67890123g",
             "78901234h",
@@ -120,7 +140,12 @@
             "romance"
         ],
         "calificacion": 8.8,
-        "director_id": "g965874m",
+        "director": {
+            "nombre": "robert zemeckis",
+            "nacionalidad": "ee.uu.",
+            "fecha_nacimiento": "1951-05-14",
+            "biografia": "robert zemeckis es un director estadounidense conocido por su dominio de los efectos visuales y películas icónicas como 'volver al futuro' y 'forrest gump'."
+        },
         "actores_id": [
             "11223344k",
             "22334455l",
