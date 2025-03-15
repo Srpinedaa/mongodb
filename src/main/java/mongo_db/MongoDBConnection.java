@@ -167,7 +167,7 @@ public class MongoDBConnection {
                 }
             } else {
                 peliculaEncontrada = false;
-                System.out.println("pelicula no trobat.");
+                System.out.println("pelicula no encontrada.");
                 buscador(database, lector, userId);
             }
             if (peliculaEncontrada) {
@@ -183,96 +183,120 @@ public class MongoDBConnection {
 
     public static void accionesPelicula(int opcion, int peliculaId, String userId, MongoDatabase database,
             Scanner lector, MongoCollection<Document> collectionPelicula) {
-        switch (opcion) {
-            case 1:
-                MongoCollection<Document> collectionUsuarios = database.getCollection("usuarios");
-                Document filtro = new Document("_id", userId);
+        try {
+            switch (opcion) {
+                case 1:
+                    MongoCollection<Document> collectionUsuarios = database.getCollection("usuarios");
+                    Document filtro = new Document("_id", userId);
 
-                Document actualizacion = new Document("$addToSet", new Document("peliculas_favoritas", peliculaId));
+                    Document actualizacion = new Document("$addToSet", new Document("peliculas_favoritas", peliculaId));
 
-                collectionUsuarios.updateOne(filtro, actualizacion);
+                    collectionUsuarios.updateOne(filtro, actualizacion);
 
-                System.out.println("Documents actualitzats correctament!");
-                buscador(database, lector, userId);
+                    System.out.println("Documents actualitzats correctament!");
+                    buscador(database, lector, userId);
 
-                break;
-            case 2:
-                System.out.println("Introduce tu comentario:");
-                String comentario = lector.nextLine();
-                System.out.println("Introduce tu puntuacion:");
-                int puntuacion = lector.nextInt();
-                Document critica = new Document("comentario", comentario).append("puntuacion", puntuacion);
-                Document filtroPelicula = new Document("_id", peliculaId);
-                Document actualizacionPelicula = new Document("$addToSet", new Document("criticas", critica));
-                collectionPelicula.updateOne(filtroPelicula, actualizacionPelicula);
-                System.out.println("Documents actualitzats correctament!");
-                buscador(database, lector, userId);
-                break;
-            case 3:
-                pantallaHomeUsuario(database, lector, userId);
-                break;
-            default:
-                break;
+                    break;
+                case 2:
+                    System.out.println("Introduce tu comentario:");
+                    String comentario = lector.nextLine();
+                    System.out.println("Introduce tu puntuacion:");
+                    int puntuacion = lector.nextInt();
+                    Document critica = new Document("comentario", comentario).append("puntuacion", puntuacion);
+                    Document filtroPelicula = new Document("_id", peliculaId);
+                    Document actualizacionPelicula = new Document("$addToSet", new Document("criticas", critica));
+                    collectionPelicula.updateOne(filtroPelicula, actualizacionPelicula);
+                    System.out.println("Documents actualitzats correctament!");
+                    buscador(database, lector, userId);
+                    break;
+                case 3:
+                    pantallaHomeUsuario(database, lector, userId);
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            System.err.println("Error en accionesPelicula: " + e.getMessage());
         }
     }
 
     @SuppressWarnings("unchecked")
     public static void perfilUsuario(MongoDatabase database, Scanner lector, String userId) {
-        MongoCollection<Document> collectionUsuarios = database.getCollection("usuarios");
-        Document user = collectionUsuarios.find(eq("_id", userId)).first();
-
         try {
-            String asciiArt = FigletFont.convertOneLine(capitalize(user.get("_id").toString()));
-            System.out.println(asciiArt);
-        } catch (Exception e) {
-            System.err.println("Error al generar ASCII Art: " + e.getMessage());
-        }
-        System.out.println("Peliculas favoritas: ");
-        List<Integer> peliculasFavoritas = (List<Integer>) user.get("peliculas_favoritas");
-        for (int pelicula_id : peliculasFavoritas) {
-            Document pelicula = database.getCollection("peliculas").find(eq("_id", pelicula_id)).first();
+            MongoCollection<Document> collectionUsuarios = database.getCollection("usuarios");
+            Document user = collectionUsuarios.find(eq("_id", userId)).first();
+
             try {
-                String asciiArt = FigletFont.convertOneLine(capitalize(pelicula.get("titulo").toString()));
+                String asciiArt = FigletFont.convertOneLine(capitalize(user.get("_id").toString()));
                 System.out.println(asciiArt);
             } catch (Exception e) {
                 System.err.println("Error al generar ASCII Art: " + e.getMessage());
             }
+            System.out.println("Peliculas favoritas: ");
+            List<Integer> peliculasFavoritas = (List<Integer>) user.get("peliculas_favoritas");
+            for (int pelicula_id : peliculasFavoritas) {
+                Document pelicula = database.getCollection("peliculas").find(eq("_id", pelicula_id)).first();
+                try {
+                    String asciiArt = FigletFont.convertOneLine(capitalize(pelicula.get("titulo").toString()));
+                    System.out.println(asciiArt);
+                } catch (Exception e) {
+                    System.err.println("Error al generar ASCII Art: " + e.getMessage());
+                }
 
-            List<Document> criticas = (List<Document>) pelicula.get("criticas");
-            if (criticas != null) {
-                for (Document critica : criticas) {
-                    if (critica.get("usuario").equals(userId)) {
-                        System.out.println("- " + critica.getString("comentario") + " - " + critica.get("puntuacion"));
+                List<Document> criticas = (List<Document>) pelicula.get("criticas");
+                if (criticas != null) {
+                    for (Document critica : criticas) {
+                        if (critica.get("usuario") != null) {
+                            if (critica.get("usuario").equals(userId)) {
+                                System.out.println(
+                                        "- " + critica.getString("comentario") + " - " + critica.get("puntuacion"));
+                            }
+                        }
+
                     }
                 }
-            }
 
-            try {
-                String separador = FigletFont.convertOneLine("---------");
-                System.out.println(separador);
-            } catch (Exception e) {
-                System.err.println("Error al generar ASCII Art: " + e.getMessage());
+                try {
+                    String separador = FigletFont.convertOneLine("---------");
+                    System.out.println(separador);
+                } catch (Exception e) {
+                    System.err.println("Error al generar ASCII Art: " + e.getMessage());
+                }
             }
-
+            System.out.println("1. modificar cuenta \n 2. Volver al menu");
+            int opcion = lector.nextInt();
+            lector.nextLine();
+            switch (opcion) {
+                case 1:
+                    cambiarPass(lector, database, userId);
+                    break;
+                case 2:
+                    pantallaHomeUsuario(database, lector, userId);
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            System.err.println("Error en perfilUsuario: " + e.getMessage());
         }
-        System.out.println("1. modificar cuenta \n 2. Volver al menu");
-        int opcion = lector.nextInt();
-        lector.nextLine();
-        switch (opcion) {
-            case 1:
-                System.out.println("Introduce tu nueva contraseña:");
-                String password = lector.nextLine();
-                Document filtro = new Document("_id", userId);
-                Document actualizacion = new Document("$set", new Document("password", password));
-                collectionUsuarios.updateOne(filtro, actualizacion);
-                System.out.println("Documents actualitzats correctament!");
-                perfilUsuario(database, lector, userId);
-                break;
-            case 2:
-                pantallaHomeUsuario(database, lector, userId);
-                break;
-            default:
-                break;
+    }
+
+    public static void cambiarPass(Scanner lector, MongoDatabase database, String userId) {
+        MongoCollection<Document> collectionUsuarios = database.getCollection("usuarios");
+
+        System.out.println("Introduce tu nueva contraseña:");
+        String password = lector.nextLine();
+        System.out.println("Vuelve a introducir tu contraseña:");
+        String password2 = lector.nextLine();
+        if (password.equals(password2)) {
+            Document filtro = new Document("_id", userId);
+            Document actualizacion = new Document("$set", new Document("password", password2));
+            collectionUsuarios.updateOne(filtro, actualizacion);
+            System.out.println("Documents actualitzats correctament!");
+            perfilUsuario(database, lector, userId);
+        } else {
+            System.out.println("Las contraseñas no coinciden.");
+            cambiarPass(lector, database, userId);
         }
     }
 
@@ -285,60 +309,64 @@ public class MongoDBConnection {
 
     public static void pantallaAdministrador(MongoDatabase database, Scanner lector) {
 
-        System.out.println(rojo + "Bienvenido" + reset);
-        System.out.println("1: Administrar peliculas. \n 2: Administrar actores. \n 3: Administrar usuarios.");
-        int opcion = lector.nextInt();
-        lector.nextLine();
-        switch (opcion) {
-            case 1:
-                administrarPeliculas(database, lector);
-                break;
-            case 2:
-                administrarActores(database, lector);
-                break;
-            case 3:
-                administrarUsuarios(database, lector);
-                break;
-            default:
-
-                break;
+        try {
+            System.out.println(rojo + "Bienvenido" + reset);
+            System.out.println(
+                    "1: Administrar peliculas. \n 2: Administrar actores. \n 3: Administrar usuarios. \n 4: Cerrar sesion");
+            int opcion = lector.nextInt();
+            lector.nextLine();
+            switch (opcion) {
+                case 1:
+                    administrarPeliculas(database, lector);
+                    break;
+                case 2:
+                    administrarActores(database, lector);
+                    break;
+                case 3:
+                    administrarUsuarios(database, lector);
+                    break;
+                default:
+                case 4:
+                    System.out.println("Sesion cerrada.");
+                    break;
+            }
+        } catch (Exception e) {
+            System.err.println("Error en pantallaAdministrador: " + e.getMessage());
         }
     }
 
     public static void administrarPeliculas(MongoDatabase database, Scanner lector) {
-        MongoCollection<Document> collection = database.getCollection("peliculas");
+        try {
+            MongoCollection<Document> collection = database.getCollection("peliculas");
 
-        System.out
-                .println(
-                        "1: Insertar Pelicula \n 2: Leer Pelicula \n 3: Actualizar Pelicula \n 4: Eliminar Pelicula \n 5: Volver al menu");
-        switch (lector.nextInt()) {
-            case 1:
-                lector.nextLine();
-
-                insertarPelicula(database, lector, collection);
-                break;
-            case 2:
-                lector.nextLine();
-
-                mostrarPelicula(database, lector, collection);
-                break;
-            case 3:
-                lector.nextLine();
-
-                actualizarPelicula(database, lector, collection);
-                break;
-            case 4:
-                lector.nextLine();
-
-                eliminarPelicula(lector, collection);
-                break;
-            case 5:
-                lector.nextLine();
-
-                pantallaAdministrador(database, lector);
-                break;
-            default:
-                break;
+            System.out.println(
+                    "1: Insertar Pelicula \n 2: Leer Pelicula \n 3: Actualizar Pelicula \n 4: Eliminar Pelicula \n 5: Volver al menu");
+            switch (lector.nextInt()) {
+                case 1:
+                    lector.nextLine();
+                    insertarPelicula(database, lector, collection);
+                    break;
+                case 2:
+                    lector.nextLine();
+                    mostrarPelicula(database, lector, collection);
+                    break;
+                case 3:
+                    lector.nextLine();
+                    actualizarPelicula(database, lector, collection);
+                    break;
+                case 4:
+                    lector.nextLine();
+                    eliminarPelicula(lector, collection);
+                    break;
+                case 5:
+                    lector.nextLine();
+                    pantallaAdministrador(database, lector);
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            System.err.println("Error en administrarPeliculas: " + e.getMessage());
         }
     }
 
@@ -352,7 +380,7 @@ public class MongoDBConnection {
             Document peliculaEncontrada = collectionPelicula.find(eq("_id", idPelicula)).first();
             if (peliculaEncontrada != null) {
                 System.out.println("Ya existe la película con el id: " + idPelicula);
-                return; // Salimos en vez de llamar recursivamente
+                insertarPelicula(database, lector, collectionPelicula);
             }
 
             System.out.println("Introduce el título de la película:");
@@ -431,7 +459,7 @@ public class MongoDBConnection {
                     new Document("$addToSet", new Document("director", director)));
 
             System.out.println("Película insertada correctamente.");
-
+            pantallaAdministrador(database, lector);
         } catch (Exception e) {
             System.out.println("Error al insertar la película: " + e.getMessage());
         }
@@ -439,40 +467,44 @@ public class MongoDBConnection {
 
     public static void mostrarPelicula(MongoDatabase database, Scanner lector,
             MongoCollection<Document> collectionPelicula) {
-        System.out.println("P E L I C U L A S: ");
-        for (Document pelicula : collectionPelicula.find()) {
-            try {
-                String titulo = capitalize(pelicula.get("titulo").toString());
-                String asciiArt = FigletFont.convertOneLine(titulo);
-                System.out.println(asciiArt);
-            } catch (Exception e) {
-                System.err.println("Error al generar ASCII Art: " + e.getMessage());
+        try {
+            System.out.println("P E L I C U L A S: ");
+            for (Document pelicula : collectionPelicula.find()) {
+                try {
+                    String titulo = capitalize(pelicula.get("titulo").toString());
+                    String asciiArt = FigletFont.convertOneLine(titulo);
+                    System.out.println(asciiArt);
+                } catch (Exception e) {
+                    System.err.println("Error al generar ASCII Art: " + e.getMessage());
+                }
+                System.out.println(pelicula.get("genero") + " - " + pelicula.get("calificacion"));
+                @SuppressWarnings("unchecked")
+                List<Document> criticas = (List<Document>) pelicula.get("criticas");
+                if (criticas != null) {
+                    for (Document critica : criticas) {
+                        System.out.println("- " + critica.getString("comentario") + " - " + critica.get("puntuacion"));
+                    }
+                } else {
+                    System.out.println("No hay criticas.");
+                }
             }
-            System.out.println(pelicula.get("genero") + " - " + pelicula.get("calificacion"));
-            @SuppressWarnings("unchecked")
-            List<Document> criticas = (List<Document>) pelicula.get("criticas");
-            if (criticas != null) {
-                for (Document critica : criticas) {
-                    System.out.println("- " + critica.getString("comentario") + " - " + critica.get("puntuacion"));
+            System.out.println("¿Deseas buscar una pelicula en específico? (s/n)");
+            String respuesta = lector.nextLine();
+            if (respuesta.toLowerCase().equals("s")) {
+                System.out.println("Introduce el titulo de la pelicula a buscar:");
+                String titulo = lector.nextLine();
+                Document pelicula = collectionPelicula.find(eq("titulo", titulo)).first();
+                mostrarPelicula(database, lector, collectionPelicula);
+                if (pelicula != null) {
+                    System.out.println("Pelicula encontrada: " + pelicula.toJson());
+                } else {
+                    System.out.println("Pelicula no encontrada.");
                 }
             } else {
-                System.out.println("No hay criticas.");
+                administrarPeliculas(database, lector);
             }
-        }
-        System.out.println("deseas buscar una pelicula en especifico? (s/n)");
-        String respuesta = lector.nextLine();
-        if (respuesta.toLowerCase().equals("s")) {
-            System.out.println("Introduce el titulo de la pelicula a buscar:");
-            String titulo = lector.nextLine();
-            Document user = collectionPelicula.find(eq("titulo", titulo)).first();
-            mostrarPelicula(database, lector, collectionPelicula);
-            if (user != null) {
-                System.out.println("pelicula trobat: " + user.toJson());
-            } else {
-                System.out.println("pelicula no trobat.");
-            }
-        } else {
-            administrarPeliculas(database, lector);
+        } catch (Exception e) {
+            System.err.println("Error en mostrarPelicula: " + e.getMessage());
         }
 
     }
@@ -481,273 +513,362 @@ public class MongoDBConnection {
     public static void actualizarPelicula(MongoDatabase database, Scanner lector,
             MongoCollection<Document> collectionPelicula) {
 
-        System.out.println("Introduce el titulo de la pelicula que quieres actualizar:");
-        String titulo = lector.nextLine();
-        Document pelicula = collectionPelicula.find(eq("titulo", titulo)).first();
-        int peliculaId = Integer.parseInt(pelicula.get("_id").toString());
+        try {
+            System.out.println("Introduce el titulo de la pelicula que quieres actualizar:");
+            String titulo = lector.nextLine();
+            Document pelicula = collectionPelicula.find(eq("titulo", titulo)).first();
+            int peliculaId = Integer.parseInt(pelicula.get("_id").toString());
 
-        if (pelicula != null) {
-            System.out.println("pelicula encontrada: " + pelicula.toJson());
-            System.out.println("Introduce el nombre del premio:");
-            String nombrePremio = lector.nextLine();
-            System.out.println("introduce la categoria en la que gano");
-            String categoria = lector.nextLine();
-            System.out.println("Introduce el año en el que gano la pelicula:");
-            int anyo = lector.nextInt();
-            Document premios = new Document("nombre", nombrePremio).append("categoria", categoria).append("año", anyo);
-            Document filtroPelicula = new Document("_id", peliculaId);
-            Document actualizacionPelicula = new Document("$addToSet", new Document("premios", premios));
-            collectionPelicula.updateOne(filtroPelicula, actualizacionPelicula);
-            System.out.println("Documents actualitzats correctament!");
-        } else {
-            System.out.println("pelicula no encontrada.");
+            if (pelicula != null) {
+                System.out.println("pelicula encontrada: " + pelicula.toJson());
+                System.out.println("Introduce el nombre del premio:");
+                String nombrePremio = lector.nextLine();
+                System.out.println("introduce la categoria en la que gano");
+                String categoria = lector.nextLine();
+                System.out.println("Introduce el año en el que gano la pelicula:");
+                int anyo = lector.nextInt();
+                lector.nextLine(); // Limpiar buffer
+                Document premios = new Document("nombre", nombrePremio).append("categoria", categoria).append("año",
+                        anyo);
+                Document filtroPelicula = new Document("_id", peliculaId);
+                Document actualizacionPelicula = new Document("$addToSet", new Document("premios", premios));
+                collectionPelicula.updateOne(filtroPelicula, actualizacionPelicula);
+                System.out.println("Documents actualitzats correctament!");
+            } else {
+                System.out.println("pelicula no encontrada.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error en actualizarPelicula: " + e.getMessage());
         }
         System.out.println("Inserta los nuevos premios de la pelicula:");
 
     }
 
     public static void eliminarPelicula(Scanner lector, MongoCollection<Document> collectionPelicula) {
-        System.out.println("Introduce el titulo de la pelicula que quieres eliminar:");
-        String titulo = lector.nextLine();
-        Document pelicula = collectionPelicula.find(eq("titulo", titulo)).first();
-        if (pelicula != null) {
-            System.out.println("pelicula trobat: " + pelicula.toJson());
-            System.out.println("Estas seguro de que quieres eliminar la pelicula? (s/n)");
-            String respuesta = lector.nextLine();
-            if (respuesta.toLowerCase().equals("s")) {
-                collectionPelicula.deleteOne(eq("titulo", titulo));
-                System.out.println("Pelicula eliminada correctamente.");
+        try {
+            System.out.println("Introduce el titulo de la pelicula que quieres eliminar:");
+            String titulo = lector.nextLine();
+            Document pelicula = collectionPelicula.find(eq("titulo", titulo)).first();
+            if (pelicula != null) {
+                System.out.println("pelicula encontrada: " + pelicula.toJson());
+                System.out.println("Estas seguro de que quieres eliminar la pelicula? (s/n)");
+                String respuesta = lector.nextLine();
+                if (respuesta.toLowerCase().equals("s")) {
+                    collectionPelicula.deleteOne(eq("titulo", titulo));
+                    System.out.println("Pelicula eliminada correctamente.");
+                } else {
+                    System.out.println("Operacion cancelada.");
+                }
             } else {
-                System.out.println("Operacion cancelada.");
+                System.out.println("pelicula no encontrada.");
             }
-        } else {
-            System.out.println("pelicula no trobat.");
+        } catch (Exception e) {
+            System.err.println("Error en eliminarPelicula: " + e.getMessage());
         }
     }
 
     public static void administrarActores(MongoDatabase database, Scanner lector) {
 
-        MongoCollection<Document> collection = database.getCollection("actores");
-        System.out
-                .println(
-                        "1: Insertar actor \n 2: Leer actor \n 3: Actualizar actor \n 4: Eliminar actor \n 5: Volver al menu");
-        switch (lector.nextInt()) {
-            case 1:
-                insertarActor(database, lector, collection);
-                break;
-            case 2:
-                mostrarActor(database, lector, collection);
-                break;
-            case 3:
-                actualizarActor(database, lector, collection);
-                break;
-            case 4:
-                eliminarActor(database, lector, collection);
-                break;
-            default:
-                pantallaAdministrador(database, lector);
-                break;
+        try {
+            MongoCollection<Document> collection = database.getCollection("actores");
+            System.out.println(
+                    "1: Insertar actor \n 2: Leer actor \n 3: Actualizar actor \n 4: Eliminar actor \n 5: Volver al menu");
+            switch (lector.nextInt()) {
+                case 1:
+                    insertarActor(database, lector, collection);
+                    break;
+                case 2:
+                    mostrarActor(database, lector, collection);
+                    break;
+                case 3:
+                    actualizarActor(database, lector, collection);
+                    break;
+                case 4:
+                    eliminarActor(database, lector, collection);
+                    break;
+                default:
+                    pantallaAdministrador(database, lector);
+                    break;
+            }
+        } catch (Exception e) {
+            System.err.println("Error en administrarActores: " + e.getMessage());
         }
 
     }
 
     private static void insertarActor(MongoDatabase database, Scanner lector,
             MongoCollection<Document> collectionActor) {
-        MongoCollection<Document> collectionPelicula = database.getCollection("peliculas");
+        try {
+            MongoCollection<Document> collectionPelicula = database.getCollection("peliculas");
 
-        lector.nextLine();
-        System.out.println("Introduce el identificador del actor:");
-        String idActor = lector.nextLine();
-        System.out.println("Introduce el nombre del actor:");
-        String nombre = lector.nextLine();
-        System.out.println("Introduce la nacionalidad del actor:");
-        String nacionalidad = lector.nextLine();
-        System.out.println("Introduce la fecha de nacimiento del actor:");
-        String fechaNacimiento = lector.nextLine();
-        System.out.println("Introduce la biografía del actor:");
-        String biografia = lector.nextLine();
+            lector.nextLine();
+            System.out.println("Introduce el identificador del actor:");
+            String idActor = lector.nextLine();
+            System.out.println("Introduce el nombre del actor:");
+            String nombre = lector.nextLine();
+            System.out.println("Introduce la nacionalidad del actor:");
+            String nacionalidad = lector.nextLine();
+            System.out.println("Introduce la fecha de nacimiento del actor:");
+            String fechaNacimiento = lector.nextLine();
+            System.out.println("Introduce la biografía del actor:");
+            String biografia = lector.nextLine();
 
-        Document documentoActor = new Document("nombre", nombre.toLowerCase())
-                .append("nacionalidad", nacionalidad.toLowerCase())
-                .append("fecha_nacimiento", fechaNacimiento)
-                .append("biografia", biografia).append("_id", idActor);
-        collectionActor.insertOne(documentoActor);
-        Document actor = collectionActor.find(eq("nombre", nombre)).first();
+            Document documentoActor = new Document("nombre", nombre.toLowerCase())
+                    .append("nacionalidad", nacionalidad.toLowerCase())
+                    .append("fecha_nacimiento", fechaNacimiento)
+                    .append("biografia", biografia).append("_id", idActor);
+            collectionActor.insertOne(documentoActor);
+            Document actor = collectionActor.find(eq("nombre", nombre)).first();
 
-        if (actor != null) {
-            int actorId = Integer.parseInt(actor.get("_id").toString());
-            System.out.println("Introduce la pelicula en las que ha trabajado:");
-            String tituloPelicula = lector.nextLine();
-            Document pelicula = collectionPelicula.find(eq("titulo", tituloPelicula)).first();
-            if (pelicula != null) {
-                Document filtroPelicula = new Document("_id", actorId);
-                Document actualizacionActor = new Document("$addToSet", new Document("peliculas", pelicula.get("_id")));
-                collectionActor.updateOne(filtroPelicula, actualizacionActor);
-                System.out.println("Pelicula insertada correctamente.");
+            if (actor != null) {
+                System.out.println("Entra");
+                String actorId = actor.get("_id").toString();
+                System.out.println("Introduce la pelicula en las que ha trabajado:");
+                String tituloPelicula = lector.nextLine();
+                Document pelicula = collectionPelicula.find(eq("titulo", tituloPelicula)).first();
+                if (pelicula != null) {
+                    Document filtroPelicula = new Document("_id", pelicula.get("_id"));
+                    Document actualizacionActor = new Document("$addToSet",
+                            new Document("actores_id", actorId));
+                    collectionPelicula.updateOne(filtroPelicula, actualizacionActor);
+                    System.out.println("Pelicula insertada correctamente.");
+                } else {
+                    System.out.println("La pelicula no existe.");
+                }
+
             } else {
-                System.out.println("el actor no existe.");
+                System.out.println("Error al insertar el actor.");
             }
-
-        } else {
-            System.out.println("Error al insertar el actor.");
-
+            System.out.println("Actor insertado correctamente.");
+        } catch (Exception e) {
+            System.err.println("Error en insertarActor: " + e.getMessage());
         }
-        System.out.println("Actor insertado correctamente.");
     }
 
     private static void mostrarActor(MongoDatabase database, Scanner lector, MongoCollection<Document> collection) {
-        System.out.println("A C T O R E S: ");
-        for (Document actor : collection.find()) {
-            try {
-                String nombre = capitalize(actor.get("nombre").toString());
-                String asciiArt = FigletFont.convertOneLine(nombre);
-                System.out.println(asciiArt);
-            } catch (Exception e) {
-                System.err.println("Error al generar ASCII Art: " + e.getMessage());
+        try {
+            System.out.println("A C T O R E S: ");
+            for (Document actor : collection.find()) {
+                try {
+                    String nombre = capitalize(actor.get("nombre").toString());
+                    String asciiArt = FigletFont.convertOneLine(nombre);
+                    System.out.println(asciiArt);
+                } catch (Exception e) {
+                    System.err.println("Error al generar ASCII Art: " + e.getMessage());
+                }
+                System.out.println(
+                        actor.get("nacionalidad") + " - " + actor.get("fecha_nacimiento") + " - "
+                                + actor.get("biografia"));
             }
-            System.out.println(
-                    actor.get("nacionalidad") + " - " + actor.get("fecha_nacimiento") + " - " + actor.get("biografia"));
-        }
-        System.out.println("¿Deseas buscar un actor en específico? (s/n)");
-        String respuesta = lector.nextLine();
-        if (respuesta.toLowerCase().equals("s")) {
-            System.out.println("Introduce el nombre del actor a buscar:");
-            String nombre = lector.nextLine();
-            Document actor = collection.find(eq("nombre", nombre.toLowerCase())).first();
-            if (actor != null) {
-                System.out.println("Actor encontrado: " + actor.toJson());
+            System.out.println("¿Deseas buscar un actor en específico? (s/n)");
+            String respuesta = lector.nextLine();
+            if (respuesta.toLowerCase().equals("s")) {
+                System.out.println("Introduce el nombre del actor a buscar:");
+                String nombre = lector.nextLine();
+                Document actor = collection.find(eq("nombre", nombre.toLowerCase())).first();
+                if (actor != null) {
+                    System.out.println("Actor encontrado: " + actor.toJson());
+                } else {
+                    System.out.println("Actor no encontrado.");
+                }
             } else {
-                System.out.println("Actor no encontrado.");
+                administrarActores(database, lector);
             }
-        } else {
-            administrarActores(database, lector);
+        } catch (Exception e) {
+            System.err.println("Error en mostrarActor: " + e.getMessage());
         }
     }
 
     private static void actualizarActor(MongoDatabase database, Scanner lector, MongoCollection<Document> collection) {
-        MongoCollection<Document> collectionPelicula = database.getCollection("peliculas");
+        lector.nextLine();
+        try {
+            MongoCollection<Document> collectionPelicula = database.getCollection("peliculas");
 
-        System.out.println("Introduce el nombre del actor que quieres actualizar:");
-        String nombre = lector.nextLine();
-        Document actor = collection.find(eq("nombre", nombre.toLowerCase())).first();
-        Document filtroActor = new Document();
-        Document actualizacionActor = new Document();
-        System.out.println("1: premios \n 2:peliculas");
-        if (actor != null) {
+            System.out.println("Introduce el nombre del actor que quieres actualizar:");
+            String nombre = lector.nextLine();
+            Document actor = collection.find(eq("nombre", nombre.toLowerCase())).first();
+            Document filtroActor = new Document();
+            Document actualizacionActor = new Document();
+            System.out.println("1: premios \n 2:peliculas");
+            if (actor != null) {
 
-            switch (lector.nextInt()) {
-                case 1:
-                    System.out.println("Introduce el nombre del premio:");
-                    String nombrePremio = lector.nextLine();
-                    System.out.println("introduce la categoria en la que gano");
-                    String categoria = lector.nextLine();
-                    System.out.println("Introduce el año en el que gano la pelicula:");
-                    int anyo = lector.nextInt();
-                    Document premios = new Document("nombre", nombrePremio).append("categoria", categoria).append("año",
-                            anyo);
-                    filtroActor = new Document("_id", actor.get("_id"));
-                    actualizacionActor = new Document("$addToSet", new Document("premios", premios));
-                    pantallaAdministrador(database, lector);
-                    break;
-                case 2:
-                    System.out.println("Introduce la pelicula en la que ha trabajado:");
-                    String tituloPelicula = lector.nextLine();
-                    Document pelicula = collectionPelicula.find(eq("titulo", tituloPelicula)).first();
-                    if (pelicula != null) {
+                switch (lector.nextInt()) {
+                    case 1:
+                        lector.nextLine(); // Limpiar buffer
+                        System.out.println("Introduce el nombre del premio:");
+                        String nombrePremio = lector.nextLine();
+                        System.out.println("introduce la categoria en la que gano");
+                        String categoria = lector.nextLine();
+                        System.out.println("Introduce el año en el que gano el premio:");
+                        int anyo = lector.nextInt();
+                        lector.nextLine(); // Limpiar buffer
+                        Document premios = new Document("nombre", nombrePremio).append("categoria", categoria).append(
+                                "año",
+                                anyo);
                         filtroActor = new Document("_id", actor.get("_id"));
-                        actualizacionActor = new Document("$addToSet", new Document("peliculas", pelicula.get("_id")));
-                        System.out.println("Pelicula insertada correctamente.");
-                    } else {
-                        System.out.println("La pelicula no existe.");
-                    }
-                    pantallaAdministrador(database, lector);
-                    break;
-                default:
-                    break;
+                        actualizacionActor = new Document("$addToSet", new Document("premios", premios));
+                        break;
+                    case 2:
+                        lector.nextLine(); // Limpiar buffer
+                        System.out.println("Introduce la pelicula en la que ha trabajado:");
+                        String tituloPelicula = lector.nextLine();
+                        Document pelicula = collectionPelicula.find(eq("titulo", tituloPelicula)).first();
+                        if (pelicula != null) {
+                            filtroActor = new Document("_id", actor.get("_id"));
+                            actualizacionActor = new Document("$addToSet",
+                                    new Document("peliculas", pelicula.get("_id")));
+                            System.out.println("Pelicula insertada correctamente.");
+                        } else {
+                            System.out.println("La pelicula no existe.");
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                collection.updateOne(filtroActor, actualizacionActor);
+                System.out.println("Documents actualitzats correctament!");
+            } else {
+                System.out.println("Actor no encontrado.");
             }
-            collection.updateOne(filtroActor, actualizacionActor);
-            System.out.println("Documents actualitzats correctament!");
-        } else {
-            System.out.println("Actor no encontrado.");
+        } catch (Exception e) {
+            System.err.println("Error en actualizarActor: " + e.getMessage());
         }
+        pantallaAdministrador(database, lector);
     }
 
+    @SuppressWarnings("unused")
     private static void eliminarActor(MongoDatabase database, Scanner lector, MongoCollection<Document> collection) {
-        System.out.println("Introduce el nombre del actor que quieres eliminar:");
-        String nombre = lector.nextLine();
-        Document actor = collection.find(eq("nombre", nombre.toLowerCase())).first();
-        if (actor != null) {
-            System.out.println("Actor encontrado: " + actor.toJson());
-            System.out.println("¿Estás seguro de que quieres eliminar el actor? (s/n)");
-            String respuesta = lector.nextLine();
-            if (respuesta.toLowerCase().equals("s")) {
-                collection.deleteOne(eq("nombre", nombre.toLowerCase()));
-                System.out.println("Actor eliminado correctamente.");
+        lector.nextLine();
+        try {
+            System.out.println("Introduce el nombre del actor que quieres eliminar:");
+            String nombre = lector.nextLine();
+            Document actor = collection.find(eq("nombre", nombre.toLowerCase())).first();
+            String actorId = actor.get("_id").toString();
+
+            if (actor != null) {
+                // System.out.println("Actor encontrado: " + actor.toJson());
+                try {
+                    String nombreActor = capitalize(actor.get("nombre").toString());
+                    String asciiArt = FigletFont.convertOneLine(nombreActor);
+                    System.out.println(asciiArt);
+                } catch (Exception e) {
+                    System.err.println("Error al generar ASCII Art: " + e.getMessage());
+                }
+                System.out.println(
+                        actor.get("nacionalidad") + " - " + actor.get("fecha_nacimiento") + " - "
+                                + actor.get("biografia"));
+                System.out.println("¿Estás seguro de que quieres eliminar el actor? (s/n)");
+                String respuesta = lector.nextLine();
+                if (respuesta.toLowerCase().equals("s")) {
+                    collection.deleteOne(eq("nombre", nombre.toLowerCase()));
+                    Document filtroPelicula = new Document("actores_id", actorId);
+                    Document actualizacionPelicula = new Document("$pull", new Document("actores_id", actorId));
+                    database.getCollection("peliculas").updateOne(filtroPelicula, actualizacionPelicula);
+                    System.out.println("Actor eliminado correctamente.");
+                } else {
+                    System.out.println("Operación cancelada.");
+                }
             } else {
-                System.out.println("Operación cancelada.");
+                System.out.println("Actor no encontrado.");
             }
-        } else {
-            System.out.println("Actor no encontrado.");
+        } catch (Exception e) {
+            System.err.println("Error en eliminarActor: " + e.getMessage());
         }
         pantallaAdministrador(database, lector);
 
     }
 
     public static void administrarUsuarios(MongoDatabase database, Scanner lector) {
-        MongoCollection<Document> collection = database.getCollection("usuarios");
+        try {
+            MongoCollection<Document> collection = database.getCollection("usuarios");
 
-        System.out.println("1 Leer usuario  \n 2: Eliminar usuario");
-        switch (lector.nextInt()) {
-            case 1:
-                mostrarUsuario(database, lector, collection);
-
-                break;
-            case 2:
-                eliminarUsuario(lector, collection);
-            default:
-                break;
+            System.out.println("1 Leer usuario  \n 2: Eliminar usuario \n 3: Volver al menu");
+            switch (lector.nextInt()) {
+                case 1:
+                    mostrarUsuario(database, lector, collection);
+                    break;
+                case 2:
+                    eliminarUsuario(lector, collection);
+                    break;
+                default:
+                case 3:
+                    pantallaAdministrador(database, lector);
+                    break;
+            }
+        } catch (Exception e) {
+            System.err.println("Error en administrarUsuarios: " + e.getMessage());
         }
     }
 
     private static void mostrarUsuario(MongoDatabase database, Scanner lector, MongoCollection<Document> collection) {
-        System.out.println("U S U A R I O S: ");
-        for (Document usuario : collection.find()) {
-            System.out.println(usuario.toJson());
-        }
-        System.out.println("¿Deseas buscar un usuario en específico? (s/n)");
-        String respuesta = lector.nextLine();
-        if (respuesta.toLowerCase().equals("s")) {
-            System.out.println("Introduce el nombre de usuario a buscar:");
-            String nombreUsuario = lector.nextLine();
-            Document usuario = collection.find(eq("_id", nombreUsuario.toLowerCase())).first();
-            if (usuario != null) {
-                System.out.println("Usuario encontrado: " + usuario.toJson());
-            } else {
-                System.out.println("Usuario no encontrado.");
+        lector.nextLine();
+        try {
+            System.out.println("U S U A R I O S: ");
+            for (Document usuario : collection.find()) {
+                try {
+                    String nombre = capitalize(usuario.get("nombre").toString());
+                    String asciiArt = FigletFont.convertOneLine(nombre);
+                    System.out.println(asciiArt);
+                } catch (Exception e) {
+                    System.err.println("Error al generar ASCII Art: " + e.getMessage());
+                }
+                System.out.println(
+                        usuario.get("email") + " - " + usuario.get("rol") + " - "
+                                + usuario.get("fecha_registro"));
             }
-            administrarUsuarios(database, lector);
 
-        } else {
-            administrarUsuarios(database, lector);
+            System.out.println("¿Deseas buscar un usuario en específico? (s/n)");
+            String respuesta = lector.nextLine();
+            if (respuesta.toLowerCase().equals("s")) {
+                System.out.println("Introduce el nombre de usuario a buscar:");
+                String nombreUsuario = lector.nextLine();
+                Document usuario = collection.find(eq("_id", nombreUsuario.toLowerCase())).first();
+                if (usuario != null) {
+                    System.out.println("Usuario encontrado: " + usuario.toJson());
+                } else {
+                    System.out.println("Usuario no encontrado.");
+                }
+                administrarUsuarios(database, lector);
+
+            } else {
+                administrarUsuarios(database, lector);
+            }
+        } catch (Exception e) {
+            System.err.println("Error en mostrarUsuario: " + e.getMessage());
         }
     }
 
     private static void eliminarUsuario(Scanner lector, MongoCollection<Document> collection) {
-        System.out.println("Introduce el nombre de usuario que quieres eliminar:");
-        String nombreUsuario = lector.nextLine();
-        Document usuario = collection.find(eq("_id", nombreUsuario.toLowerCase())).first();
-        if (usuario != null) {
-            System.out.println("Usuario encontrado: " + usuario.toJson());
-            System.out.println("¿Estás seguro de que quieres eliminar el usuario? (s/n)");
-            String respuesta = lector.nextLine();
-            if (respuesta.toLowerCase().equals("s")) {
-                collection.deleteOne(eq("_id", nombreUsuario.toLowerCase()));
-                System.out.println("Usuario eliminado correctamente.");
+        lector.nextLine();
+        try {
+            System.out.println("Introduce el nombre de usuario que quieres eliminar:");
+            String nombreUsuario = lector.nextLine();
+            Document usuario = collection.find(eq("_id", nombreUsuario.toLowerCase())).first();
+            if (usuario != null) {
+                // System.out.println("Usuario encontrado: " + usuario.toJson());
+                try {
+                    String nombre = capitalize(usuario.get("nombre").toString());
+                    String asciiArt = FigletFont.convertOneLine(nombre);
+                    System.out.println(asciiArt);
+                } catch (Exception e) {
+                    System.err.println("Error al generar ASCII Art: " + e.getMessage());
+                }
+                System.out.println(
+                        usuario.get("email") + " - " + usuario.get("rol") + " - "
+                                + usuario.get("fecha_registro"));
+                System.out.println("¿Estás seguro de que quieres eliminar el usuario? (s/n)");
+                String respuesta = lector.nextLine();
+                if (respuesta.toLowerCase().equals("s")) {
+                    collection.deleteOne(eq("_id", nombreUsuario.toLowerCase()));
+                    System.out.println("Usuario eliminado correctamente.");
+                } else {
+                    System.out.println("Operación cancelada.");
+                }
             } else {
-                System.out.println("Operación cancelada.");
+                System.out.println("Usuario no encontrado.");
             }
-        } else {
-            System.out.println("Usuario no encontrado.");
+        } catch (Exception e) {
+            System.err.println("Error en eliminarUsuario: " + e.getMessage());
         }
     }
 }
